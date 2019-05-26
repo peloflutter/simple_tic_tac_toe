@@ -67,6 +67,54 @@ class _MainPage extends State<MainPage> {
   }
 
   // private helper methods
+  GestureDetector _buildElement(int row, int col) {
+    Border border;
+    if (row == 2 && col == 2) {
+      border = Border(
+          left: BorderSide(width: 6, color: Colors.black),
+          top: BorderSide(width: 6, color: Colors.black),
+          right: BorderSide(width: 6, color: Colors.black),
+          bottom: BorderSide(width: 6, color: Colors.black));
+    } else if (row == 2) {
+      border = Border(
+          left: BorderSide(width: 6, color: Colors.black),
+          top: BorderSide(width: 6, color: Colors.black),
+          bottom: BorderSide(width: 6, color: Colors.black));
+    } else if (col == 2) {
+      border = Border(
+          left: BorderSide(width: 6, color: Colors.black),
+          top: BorderSide(width: 6, color: Colors.black),
+          right: BorderSide(width: 6, color: Colors.black));
+    } else {
+      border = Border(
+          left: BorderSide(width: 6, color: Colors.black),
+          top: BorderSide(width: 6, color: Colors.black));
+    }
+
+    debugPrint('> building element at $row:$col');
+    return GestureDetector(
+        onTap: () {
+          debugPrint('> player clicked on $row:$col');
+          _setStone(row, col); // update logic
+
+          // check for end of game
+          if (_gameOver()) {
+            String who = (_firstPlayer) ? "1." : "2.";
+            _showDialog('$who Player has won!');
+            _resetGame();
+          } else {
+            _firstPlayer = !_firstPlayer;
+          }
+        },
+        child: Container(
+            width: 90,
+            decoration:
+                BoxDecoration(shape: BoxShape.rectangle, border: border),
+            child: Text(_stoneToChar(_board[row][col]),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 92.0))));
+  }
+
   String _stoneToChar(BoardState state) => (state == BoardState.Cross)
       ? 'X'
       : (state == BoardState.Circle) ? 'O' : ' ';
@@ -164,53 +212,5 @@ class _MainPage extends State<MainPage> {
       print(line);
     }
     print('');
-  }
-
-  GestureDetector _buildElement(int row, int col) {
-    Border border;
-    if (row == 2 && col == 2) {
-      border = Border(
-          left: BorderSide(width: 6, color: Colors.black),
-          top: BorderSide(width: 6, color: Colors.black),
-          right: BorderSide(width: 6, color: Colors.black),
-          bottom: BorderSide(width: 6, color: Colors.black));
-    } else if (row == 2) {
-      border = Border(
-          left: BorderSide(width: 6, color: Colors.black),
-          top: BorderSide(width: 6, color: Colors.black),
-          bottom: BorderSide(width: 6, color: Colors.black));
-    } else if (col == 2) {
-      border = Border(
-          left: BorderSide(width: 6, color: Colors.black),
-          top: BorderSide(width: 6, color: Colors.black),
-          right: BorderSide(width: 6, color: Colors.black));
-    } else {
-      border = Border(
-          left: BorderSide(width: 6, color: Colors.black),
-          top: BorderSide(width: 6, color: Colors.black));
-    }
-
-    debugPrint('> building element at $row:$col');
-    return GestureDetector(
-        onTap: () {
-          debugPrint('> player clicked on $row:$col');
-          _setStone(row, col); // update logic
-
-          // check for end of game
-          if (_gameOver()) {
-            String who = (_firstPlayer) ? "1." : "2.";
-            _showDialog('$who Player has won!');
-            _resetGame();
-          } else {
-            _firstPlayer = !_firstPlayer;
-          }
-        },
-        child: Container(
-            width: 90,
-            decoration:
-                BoxDecoration(shape: BoxShape.rectangle, border: border),
-            child: Text(_stoneToChar(_board[row][col]),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 92.0))));
   }
 }
